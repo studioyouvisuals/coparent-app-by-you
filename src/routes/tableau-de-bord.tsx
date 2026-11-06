@@ -128,20 +128,20 @@ function AddModal({ defaultDate, onClose, onSave }: { defaultDate: string; onClo
   const { t } = useI18n();
   const [type, setType] = useState<EventType>("achat");
   const [date, setDate] = useState(defaultDate);
-  const [childId, setChildId] = useState(demoChildren[0].id);
+  const [childId, setChildId] = useState(demoChildren[0]!.id);
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<{ date?: string; title?: string; amount?: string }>({});
   const submit = (ev: FormEvent) => {
     ev.preventDefault();
-    const errs: Record<string, string> = {};
+    const errs: { date?: string; title?: string; amount?: string } = {};
     if (!date) errs.date = t.modal.dateRequired;
     if (!title.trim()) errs.title = t.modal.descRequired;
     const amt = amount.trim() ? Number(amount.replace(",", ".")) : undefined;
     if (amt !== undefined && (isNaN(amt) || amt < 0)) errs.amount = t.modal.amountInvalid;
     setErrors(errs);
     if (Object.keys(errs).length) return;
-    onSave({ id: crypto.randomUUID(), type, date, childId, title: title.trim().slice(0, 200), amount: amt, parentId: "p1", status: initialStatus(type) });
+    onSave({ id: crypto.randomUUID(), type, date, childId, title: title.trim().slice(0, 200), ...(amt !== undefined ? { amount: amt } : {}), parentId: "p1", status: initialStatus(type) });
   };
   const types: EventType[] = ["garde", "vacances", "achat", "besoin", "reunion_scolaire"];
   return (

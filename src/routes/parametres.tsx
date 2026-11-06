@@ -47,7 +47,7 @@ function SettingsPage() {
     if (!/^\S+@\S+\.\S+$/.test(invite)) return setInviteErr(t.login.invalidEmail);
     setInviteErr(""); setInvite(""); flash(t.settings.inviteSent);
   };
-  const pro = t.pricing.plans[1];
+  const pro = t.pricing.plans[1]!;
 
   return (
     <AppLayout active="settings">
