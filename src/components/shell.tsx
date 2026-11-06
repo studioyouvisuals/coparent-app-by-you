@@ -43,7 +43,7 @@ export function Button({ variant, className, ...p }: BtnProps) {
 
 export const inputCls = "w-full rounded-xl border bg-input/40 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring";
 
-export function Field({ label, children, error }: { label: string; children: ReactNode; error?: string }) {
+export function Field({ label, children, error }: { label: string; children: ReactNode; error?: string | undefined }) {
   return (
     <label className="block space-y-1.5">
       <span className="text-sm font-medium text-muted-foreground">{label}</span>

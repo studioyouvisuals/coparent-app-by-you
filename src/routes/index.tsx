@@ -58,7 +58,7 @@ function Landing() {
         <h2 className="text-center text-3xl font-semibold tracking-tight">{t.features.title}</h2>
         <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {t.features.items.map((f, i) => {
-            const Icon = icons[i];
+            const Icon = icons[i] ?? CalendarDays;
             return (
               <div key={f.title} className="rounded-2xl border bg-card p-6">
                 <Icon className="h-6 w-6 text-primary" />
