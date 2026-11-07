@@ -1,4 +1,6 @@
-import { Link } from "@tanstack/react-router";
+"use client";
+
+import Link from "next/link";
 import {
   CalendarDays,
   HeartHandshake,
@@ -61,13 +63,13 @@ export function AppLayout({
                 {label}
               </button>
             ) : (
-              <Link key={key} to="/tableau-de-bord" className={itemCls(false)}>
+              <Link key={key} href="/tableau-de-bord" className={itemCls(false)}>
                 <Icon className="h-4 w-4" />
                 {label}
               </Link>
             ),
           )}
-          <Link to="/parametres" className={itemCls(active === "settings")}>
+          <Link href="/parametres" className={itemCls(active === "settings")}>
             <Settings className="h-4 w-4" />
             {t.sidebar.settings}
           </Link>

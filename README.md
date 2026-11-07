@@ -1,24 +1,59 @@
-# Coparent app by you
+# CoParent
 
-Implement exactly the screenshot and nothing else
+**La garde partagée. Enfin simple.**
 
-This project was built with [Lovable](https://lovable.dev).
+Un planning commun pour les parents séparés : jours de garde, vacances, achats, besoins, réunions scolaires et activités (sport, spectacles, sorties, anniversaires). Chaque proposition d'un parent attend la validation de l'autre.
 
-## Build with Lovable
+Application bilingue français / anglais, pensée d'abord pour le mobile.
 
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/99e03b58-e1df-47f6-8ebf-056947e33ad7).
+> Projet réalisé dans le cadre d'une quête « méga-prompt » : génération avec Lovable, puis export sur GitHub et finalisation dans le code (Next.js).
 
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
+## Stack
 
-## Development
+- **Next.js 15** (App Router) + **TypeScript**
+- **Tailwind CSS v4** + **shadcn/ui**
+- **Supabase** : authentification par lien magique, base PostgreSQL avec sécurité par ligne (RLS)
+- **Stripe Checkout** : 3 offres (Starter gratuit, Pro, Business)
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+## Pages
+
+| Page | Contenu |
+|---|---|
+| `/` | Héros, fonctionnalités, prix, FAQ, pied de page |
+| `/tableau-de-bord` | Barre latérale, calendrier coloré par parent, événements à venir, Valider / Refuser |
+| `/parametres` | Profil, Facturation, Équipe |
+| `/connexion` | Connexion par lien magique |
+
+## Lancer le projet
 
 ```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
-npm run dev
+bun install        # ou npm install
+bun run dev        # http://localhost:3000
+```
+
+**Sans clés, l'app tourne en mode démo** avec des données fictives : aucun compte n'est nécessaire pour la tester. Le sélecteur « Vue de » du tableau de bord permet de passer d'un parent à l'autre pour essayer la validation.
+
+## Brancher Supabase et Stripe
+
+1. Copier `.env.example` en `.env.local` et remplir les clés.
+2. **Supabase** : coller `supabase/schema.sql` dans SQL Editor puis exécuter. Ajouter `http://localhost:3000/auth/callback` dans Authentication > URL Configuration.
+3. **Stripe (mode test)** : créer deux prix récurrents (Pro 6,99 €/mois, Business 39 €/mois) et renseigner leurs identifiants.
+
+Ne jamais committer `.env.local`.
+
+## État du projet
+
+**Fait** : interface complète FR / EN, règle de validation entre parents, schéma de base de données avec RLS, connexion par lien magique, paiement Stripe Checkout, tests des règles métier.
+
+**Reste à faire** :
+- Remplacer les données de démonstration par les lectures et écritures Supabase
+- Webhook Stripe pour enregistrer l'offre souscrite
+- Envoi réel de l'invitation au second parent
+- Événements récurrents (entraînement chaque mercredi, par exemple)
+- Export PDF de l'offre Pro
+
+## Tests
+
+```sh
+bun run test
 ```
