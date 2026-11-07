@@ -2,6 +2,8 @@
 
 **La garde partagée. Enfin simple.**
 
+**[Voir l'app en ligne](https://coparent-app-by-you.vercel.app)** (mode démo, aucun compte nécessaire)
+
 Un planning commun pour les parents séparés : jours de garde, vacances, achats, besoins, réunions scolaires et activités (sport, spectacles, sorties, anniversaires). Chaque proposition d'un parent attend la validation de l'autre.
 
 Application bilingue français / anglais, pensée d'abord pour le mobile.
