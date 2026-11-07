@@ -1,13 +1,33 @@
-export type EventType = "garde" | "vacances" | "achat" | "besoin" | "reunion_scolaire";
+export type EventType = "garde" | "vacances" | "achat" | "besoin" | "reunion_scolaire" | "activite";
 export type EventStatus = "propose" | "valide" | "refuse" | "fait";
+export type ActivityKind = "sport" | "spectacle" | "sortie" | "anniversaire";
+export type DemoKey = "e1" | "e2" | "e3" | "e4" | "e5" | "e6" | "e7" | "e8";
+
+export const eventTypes: EventType[] = [
+  "garde",
+  "vacances",
+  "achat",
+  "besoin",
+  "reunion_scolaire",
+  "activite",
+];
+export const activityKinds: ActivityKind[] = ["sport", "spectacle", "sortie", "anniversaire"];
 
 export type FamilyEvent = {
   id: string;
   type: EventType;
+  /** Free text typed by a parent. Demo events use `demoKey` instead so they can be translated. */
   title: string;
+  demoKey?: DemoKey;
   date: string; // YYYY-MM-DD
+  time?: string; // HH:MM
+  place?: string;
+  kind?: ActivityKind;
   childId: string;
+  /** Parent in charge (accompanies the child, pays, attends). */
   parentId: string;
+  /** Parent who created the event: only the other parent can approve or decline it. */
+  createdBy: string;
   amount?: number;
   status: EventStatus;
 };
@@ -15,6 +35,11 @@ export type FamilyEvent = {
 /** An event created by one parent stays "proposed" until the other approves — except custody. */
 export function initialStatus(type: EventType): EventStatus {
   return type === "garde" ? "valide" : "propose";
+}
+
+/** Only the parent who did NOT create a proposed event can approve or decline it. */
+export function canDecide(e: FamilyEvent, userId: string): boolean {
+  return e.status === "propose" && e.createdBy !== userId;
 }
 
 export const parents = [
@@ -41,13 +66,111 @@ export const toIso = (d: Date) =>
   `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 
 export function demoEvents(today: Date): FamilyEvent[] {
-  const at = (n: number) => { const d = new Date(today); d.setDate(d.getDate() + n); return toIso(d); };
+  const at = (n: number) => {
+    const d = new Date(today);
+    d.setDate(d.getDate() + n);
+    return toIso(d);
+  };
   return [
-    { id: "e1", type: "reunion_scolaire", title: "Réunion parents-professeurs", date: at(2), childId: "c1", parentId: "p1", status: "valide" },
-    { id: "e2", type: "achat", title: "Fournitures de dessin", date: at(4), childId: "c2", parentId: "p2", amount: 24.5, status: "propose" },
-    { id: "e3", type: "besoin", title: "Chaussures d'hiver", date: at(7), childId: "c2", parentId: "p1", amount: 49.9, status: "propose" },
-    { id: "e4", type: "vacances", title: "Séjour chez les grands-parents", date: at(15), childId: "c1", parentId: "p2", status: "valide" },
-    { id: "e5", type: "reunion_scolaire", title: "Spectacle de fin de trimestre", date: at(21), childId: "c2", parentId: "p1", status: "valide" },
-    { id: "e6", type: "achat", title: "Cours de natation", date: at(28), childId: "c1", parentId: "p2", amount: 120, status: "fait" },
+    {
+      id: "e1",
+      demoKey: "e1",
+      title: "",
+      type: "reunion_scolaire",
+      date: at(2),
+      time: "18:00",
+      childId: "c1",
+      parentId: "p1",
+      createdBy: "p1",
+      status: "valide",
+    },
+    {
+      id: "e2",
+      demoKey: "e2",
+      title: "",
+      type: "achat",
+      date: at(4),
+      childId: "c2",
+      parentId: "p2",
+      createdBy: "p2",
+      amount: 24.5,
+      status: "propose",
+    },
+    {
+      id: "e3",
+      demoKey: "e3",
+      title: "",
+      type: "besoin",
+      date: at(7),
+      childId: "c2",
+      parentId: "p1",
+      createdBy: "p1",
+      amount: 49.9,
+      status: "propose",
+    },
+    {
+      id: "e4",
+      demoKey: "e4",
+      title: "",
+      type: "vacances",
+      date: at(15),
+      childId: "c1",
+      parentId: "p2",
+      createdBy: "p2",
+      status: "propose",
+    },
+    {
+      id: "e5",
+      demoKey: "e5",
+      title: "",
+      type: "activite",
+      kind: "spectacle",
+      date: at(21),
+      time: "19:30",
+      childId: "c2",
+      parentId: "p1",
+      createdBy: "p1",
+      status: "valide",
+    },
+    {
+      id: "e6",
+      demoKey: "e6",
+      title: "",
+      type: "activite",
+      kind: "sport",
+      date: at(28),
+      childId: "c1",
+      parentId: "p2",
+      createdBy: "p2",
+      amount: 120,
+      status: "fait",
+    },
+    {
+      id: "e7",
+      demoKey: "e7",
+      title: "",
+      type: "activite",
+      kind: "sport",
+      date: at(3),
+      time: "10:00",
+      childId: "c2",
+      parentId: "p2",
+      createdBy: "p2",
+      status: "propose",
+    },
+    {
+      id: "e8",
+      demoKey: "e8",
+      title: "",
+      type: "activite",
+      kind: "anniversaire",
+      date: at(10),
+      time: "14:30",
+      childId: "c1",
+      parentId: "p1",
+      createdBy: "p2",
+      amount: 20,
+      status: "propose",
+    },
   ];
 }

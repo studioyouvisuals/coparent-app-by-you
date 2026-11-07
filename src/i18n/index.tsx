@@ -13,13 +13,23 @@ export function detectLang(stored: string | null, browser: string | undefined): 
 }
 
 export function formatDate(d: Date, lang: Lang) {
-  return new Intl.DateTimeFormat(lang === "fr" ? "fr-FR" : "en-US", { day: "2-digit", month: "2-digit", year: "numeric" }).format(d);
+  return new Intl.DateTimeFormat(lang === "fr" ? "fr-FR" : "en-US", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  }).format(d);
 }
 export function formatMoney(n: number, lang: Lang) {
-  return new Intl.NumberFormat(lang === "fr" ? "fr-FR" : "en-US", { style: "currency", currency: "EUR" }).format(n);
+  return new Intl.NumberFormat(lang === "fr" ? "fr-FR" : "en-US", {
+    style: "currency",
+    currency: "EUR",
+  }).format(n);
 }
 export function formatMonth(d: Date, lang: Lang) {
-  return new Intl.DateTimeFormat(lang === "fr" ? "fr-FR" : "en-US", { month: "long", year: "numeric" }).format(d);
+  return new Intl.DateTimeFormat(lang === "fr" ? "fr-FR" : "en-US", {
+    month: "long",
+    year: "numeric",
+  }).format(d);
 }
 
 type Ctx = { lang: Lang; t: Dict; setLang: (l: Lang) => void };
@@ -37,7 +47,22 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     localStorage.setItem(KEY, l);
     setLangState(l);
   };
-  return <I18nContext.Provider value={{ lang, t: dicts[lang], setLang }}>{children}</I18nContext.Provider>;
+  return (
+    <I18nContext.Provider value={{ lang, t: dicts[lang], setLang }}>
+      {children}
+    </I18nContext.Provider>
+  );
 }
 
 export const useI18n = () => useContext(I18nContext);
+
+/** Keeps the browser tab title in the current language (route `head` only knows the default). */
+export function useDocTitle(title: string) {
+  useEffect(() => {
+    document.title = title;
+  }, [title]);
+}
+
+/** Demo events carry a translation key; events typed by a parent keep their own text. */
+export const eventTitle = (e: { title: string; demoKey?: keyof Dict["demo"] }, t: Dict) =>
+  e.demoKey ? t.demo[e.demoKey] : e.title;
